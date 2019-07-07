@@ -26,10 +26,48 @@ class HomePageViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_by_name(self):
-        response = self.client.get('home')
+        response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
+
+
+class AboutPageViewTest(TestCase):
+    """Test homepage view."""
+    def setUp(self):
+        Post.objects.create(text='About Page Test')
+
+    def test_view_url_exists_at_proper_location(self):
+        response = self.client.get('/about/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_by_name(self):
+        response = self.client.get(reverse('about'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('about'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'about.html')
+
+
+class PostsPageViewTest(TestCase):
+    """Test homepage view."""
+    def setUp(self):
+        Post.objects.create(text='Posts Page Test')
+
+    def test_view_url_exists_at_proper_location(self):
+        response = self.client.get('/posts/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_by_name(self):
+        response = self.client.get(reverse('posts'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('posts'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'posts.html')
