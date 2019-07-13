@@ -1,5 +1,6 @@
 """Test cases for posts app."""
-from django.test import TestCase
+from django.contrib.auth import get_user_model
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from .models import Post
@@ -8,12 +9,21 @@ from .models import Post
 class PostModelTest(TestCase):
 
     def setUp(self):
-        Post.objects.create(text='just testing')
+        self.user = get_user_model().objects.create_user(
+            username='testuser',
+            email='test@email.com',
+            password='secret'
+        )
+        self.post = Post.objects.create(
+            title='A nice title',
+            body='OK',
+            author=self.user
+        )
 
-    def test_text_content(self):
-        post = Post.objects.get(id=1)
-        expected_object_name = post.text
-        self.assertEqual(expected_object_name, 'just testing')
+    def test_string_representation(self):
+        """Test post creation with title."""
+        post = Post.objects.create(title='A nice title')
+        self.assertEqual(str(post), post.title)
 
 
 class HomePageViewTest(TestCase):
