@@ -4,7 +4,8 @@ from django.views.generic import TemplateView, ListView
 from .models import Post
 
 
-class HomePageView(TemplateView):
+class PostListView(ListView):
+    model = Post
     template_name = 'home.html'
 
 
