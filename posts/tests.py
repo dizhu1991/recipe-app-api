@@ -25,11 +25,30 @@ class PostModelTest(TestCase):
         post = Post.objects.create(title='A nice title')
         self.assertEqual(str(post), post.title)
 
+    def test_post_content(self):
+        self.assertEqual(f'{self.post.title}', 'A nice title')
+        self.assertEqual(f'{self.post.author}', 'testuser')
+        self.assertEqual(f'{self.post.body}', 'OK')
+
+    def test_post_list_view(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'OK')
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_post_detail_view(self):
+        response = self.client.get('/post/1/')
+        no_response = self.client.get('/post/100000/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(no_response.status_code, 404)
+        self.assertContains(response, 'A nice title')
+        self.assertTemplateUsed(response, 'post_detail.html')
+
 
 class HomePageViewTest(TestCase):
     """Test homepage view."""
     def setUp(self):
-        Post.objects.create(text='another test')
+        Post.objects.create(title='another test')
 
     def test_view_url_exists_at_proper_location(self):
         response = self.client.get('/')
@@ -48,7 +67,7 @@ class HomePageViewTest(TestCase):
 class AboutPageViewTest(TestCase):
     """Test homepage view."""
     def setUp(self):
-        Post.objects.create(text='About Page Test')
+        Post.objects.create(title='About Page Test')
 
     def test_view_url_exists_at_proper_location(self):
         response = self.client.get('/about/')
@@ -67,7 +86,7 @@ class AboutPageViewTest(TestCase):
 class PostsPageViewTest(TestCase):
     """Test homepage view."""
     def setUp(self):
-        Post.objects.create(text='Posts Page Test')
+        Post.objects.create(title='Posts Page Test')
 
     def test_view_url_exists_at_proper_location(self):
         response = self.client.get('/posts/')
